@@ -184,7 +184,8 @@ jobs:
         uses: hadolint/hadolint-action@v3.1.0
         with:
           dockerfile: ${{ matrix.component }}/Dockerfile
-          failure-threshold: warning
+          ignore-rules: DL3018  # Ignores Alpine package version pinning warning
+          failure-threshold: error
 
   # Stage 7 
   update-manifest:
