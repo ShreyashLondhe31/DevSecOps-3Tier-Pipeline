@@ -151,21 +151,19 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Run Checkov on Terraform
-        uses: bridgecrewio/checkov-action@v12
+      - name: Set up Python
+        uses: actions/setup-python@v5
         with:
-          directory: terraform/
-          framework: terraform
-          soft_fail: true  # Prevents Checkov's python argument parsing crash from failing CI
-          output_format: cli
+          python-version: "3.11"
+
+      - name: Install Checkov
+        run: pip install checkov
+
+      - name: Run Checkov on Terraform
+        run: checkov -d terraform/ --framework terraform --soft-fail --output cli
 
       - name: Run Checkov on Kubernetes manifests
-        uses: bridgecrewio/checkov-action@v12
-        with:
-          directory: k8s/
-          framework: kubernetes
-          soft_fail: true
-          output_format: cli
+        run: checkov -d k8s/ --framework kubernetes --soft-fail --output cli
 
   # Stage 6
   dockerfile-lint:
